@@ -1,35 +1,33 @@
 import ltc_reader
 from datetime import datetime
 from ltc_reader import get_curr_tc
+from ltc_reader import stopAll
 import threading
-
 
 #Startup Application
 now = datetime.now()
 fName = str(now)[:10] + ".txt"
-
 f = open(fName, "w")
 notes = ""
 
-t = threading.Thread(target=ltc_reader.start_read_ltc())
-t.start()
+#t = threading.Thread(target=ltc_reader.start_read_ltc())
+#t.start()
 
-print("sssss")
-#ltc_reader.start_read_ltc()
+ltc_reader.start_read_ltc()
 
 #Running gay
 
-for i in range(1):
+while True:
   n = input()
   
   if str(n) == "done":
+    stopAll()
     break
   
   now = get_curr_tc()
-  print("TIME NOW: " + now)
   n = n + " | " + str(now) + "\n"
   notes += n
-  print(n)
+  print("note: " + n)
 
 
 #Finished

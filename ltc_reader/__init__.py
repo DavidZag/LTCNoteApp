@@ -7,7 +7,6 @@ import threading
 import os
 #113,119,101
 
-
 CHUNK = 2048
 FORMAT = pyaudio.paInt16
 CHANNELS = 1
@@ -19,13 +18,19 @@ now_tc = '00:00:00:00'
 last_cam = '-1'
 jam_advice = False
 jammed = False
+noteTime = None
+stopRead = False
 
 codes = [49,50,51,52,53,54,55,56,57,48]
 cams = {}
 
 for i,j in enumerate(codes):
     cams[j] = str(i+1)
-    
+
+def stopAll():
+    global stopRead
+    stopRead = True
+
 def bin_to_bytes(a,size=1):
     ret = int(a,2).to_bytes(size,byteorder='little')
     return ret
@@ -69,13 +74,13 @@ def decode_frame(frame):
         o['frame_tens']*10+o['frame_units'],
     )
     return o
-    
+
 def print_tc():
-    global jam,now_tc
+    global jam,now_tc, noteTime
     inter = 1/(24000/1000)
     last_jam = jam
     h,m,s,f = [int(x) for x in jam.split(':')]
-    while True:
+    while stopRead == False:
         if jam == None:
             break
         if jam != last_jam:
@@ -83,7 +88,8 @@ def print_tc():
             last_jam = jam
         tcp = "{:02d}:{:02d}:{:02d}:{:02d}".format(h,m,s,f)
         #os.system('clear')
-        print(tcp)
+        #print(tcp)
+        noteTime = tcp
         now_tc = tcp
         time.sleep(inter)
         f += 1
@@ -98,9 +104,8 @@ def print_tc():
             h += 1
 
 def get_curr_tc():
-    h,m,s,f = [int(x) for x in jam.split(':')]
-    tcp = "{:02d}:{:02d}:{:02d}:{:02d}".format(h,m,s,f)
-    return tcp
+    return noteTime
+
 
 
 def decode_ltc(wave_frames):
@@ -137,16 +142,16 @@ def decode_ltc(wave_frames):
                         if len(output) > 80:
                             frames.append(output[-80:])
                             output = ''
-                            os.system('clear')
-                            print('Jam received:',decode_frame(frames[-1])['formatted_tc'])
+                            #os.system('clear')
+                            #print('Jam received:',decode_frame(frames[-1])['formatted_tc'])
                             jam = decode_frame(frames[-1])['formatted_tc']
             sp = 1
             last = cyc
         else:
             sp += 1
 def start_read_ltc():
-    #t = threading.Thread(target=print_tc)
-    #t.start()
+    t = threading.Thread(target=print_tc)
+    t.start()
     p = pyaudio.PyAudio()
     stream = p.open(format=FORMAT,
                     channels=CHANNELS,
@@ -156,7 +161,7 @@ def start_read_ltc():
     print("Capturando LTC")
     frames = []
     try:
-        for i in range(10):
+        for i in range(100):
             data = stream.read(CHUNK)
             #print(data)
             decode_ltc(data)
