@@ -9,7 +9,7 @@ fName = str(now)[:10] + ".txt"
 f = open(fName, "w")
 notes = ""
 
-#Running 
+#Running gay
 
 while True:
   n = input()
