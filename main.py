@@ -18,6 +18,8 @@ while True:
   if str(n) == "done":
     break
 
+  ltc_reader.print_tc()
+  
   now = datetime.now()
   n = n + " | " + str(now) + "\n"
   notes += n
