@@ -158,7 +158,7 @@ def start_read_ltc():
                     rate=RATE,
                     input=True,
                     frames_per_buffer=CHUNK)
-    print("Capturando LTC")
+    print("Capturing LTC")
     frames = []
     try:
         for i in range(100):
@@ -168,7 +168,7 @@ def start_read_ltc():
             frames.append(data)
     except:
         jam = None
-        print("Programa fechado")
+        print("Ran Into Problem")
         input()
         stream.stop_stream()
         stream.close()
