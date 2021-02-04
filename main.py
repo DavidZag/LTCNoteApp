@@ -1,5 +1,4 @@
-#import ltc_reader
-#ltc_reader.start_read_ltc()
+import ltc_reader
 from datetime import datetime
 
 #Startup Application
@@ -8,6 +7,8 @@ fName = str(now)[:10] + ".txt"
 
 f = open(fName, "w")
 notes = ""
+
+ltc_reader.start_read_ltc()
 
 #Running gay
 
