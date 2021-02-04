@@ -1,4 +1,5 @@
 import pyaudio
+#import sounddevice
 import wave
 import audioop
 import time
@@ -81,7 +82,7 @@ def print_tc():
             h,m,s,f = [int(x) for x in jam.split(':')]
             last_jam = jam
         tcp = "{:02d}:{:02d}:{:02d}:{:02d}".format(h,m,s,f)
-        os.system('clear')
+        #os.system('clear')
         print(tcp)
         now_tc = tcp
         time.sleep(inter)
@@ -95,6 +96,12 @@ def print_tc():
         if m >= 60:
             m = 0
             h += 1
+
+def get_curr_tc():
+    h,m,s,f = [int(x) for x in jam.split(':')]
+    tcp = "{:02d}:{:02d}:{:02d}:{:02d}".format(h,m,s,f)
+    return tcp
+
 
 def decode_ltc(wave_frames):
     global jam
@@ -138,8 +145,8 @@ def decode_ltc(wave_frames):
         else:
             sp += 1
 def start_read_ltc():
-    t = threading.Thread(target=print_tc)
-    t.start()
+    #t = threading.Thread(target=print_tc)
+    #t.start()
     p = pyaudio.PyAudio()
     stream = p.open(format=FORMAT,
                     channels=CHANNELS,
@@ -149,8 +156,9 @@ def start_read_ltc():
     print("Capturando LTC")
     frames = []
     try:
-        while True:
+        for i in range(10):
             data = stream.read(CHUNK)
+            #print(data)
             decode_ltc(data)
             frames.append(data)
     except:
