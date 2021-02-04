@@ -3,14 +3,17 @@
 from datetime import datetime
 
 #Startup Application
-f = open("notes.txt", "a")
+now = datetime.now()
+fName = str(now)[:10] + ".txt"
+
+f = open(fName, "w")
 notes = ""
 
 #Running 
 
 while True:
   n = input()
-
+  
   if str(n) == "done":
     break
 
