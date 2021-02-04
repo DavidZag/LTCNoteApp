@@ -10,9 +10,6 @@ fName = str(now)[:10] + ".txt"
 f = open(fName, "w")
 notes = ""
 
-#t = threading.Thread(target=ltc_reader.start_read_ltc())
-#t.start()
-
 ltc_reader.start_read_ltc()
 
 #Running gay
